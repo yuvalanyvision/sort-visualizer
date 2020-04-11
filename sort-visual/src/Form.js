@@ -7,8 +7,9 @@ class Form extends React.Component {
         super(props);
 
         this.Algorithms = {
-            XX: 'this is XX123',
-            YY: 'this is YY'
+            Default: 'Default',
+            BUBBLE: 'Bubble sort',
+            MERGE: 'Merge Sort'
         };
 
         this.state = {
@@ -32,13 +33,13 @@ class Form extends React.Component {
     }
 
     handleGenerate(event) {
-        this.props.onGenerate(this.state.start, this.state.end, this.state.amount);
         event.preventDefault();
+        this.props.onGenerate(this.state.start, this.state.end, this.state.amount);
     }
 
     handleSort(event) {
-        this.props.onSort();
         event.preventDefault();
+        this.props.onSort();
     }
 
     render() {
@@ -68,38 +69,42 @@ class Form extends React.Component {
         });
 
         return (
-            <form className="div" onSubmit={this.handleSort}>
-                <div className="form-group row">
-                    <div className="form-group">
-                        <label htmlFor="exampleFormControlSelect1">Start</label>
-                        <select key="start" className="form-control" defaultValue={this.state.start} onChange={this.handleFormChange}>
-                            {startOptions}
-                        </select>
+            <div>
+                <form className="div" onSubmit={this.handleGenerate}>
+                    <div className="form-group row">
+                        <div className="form-group">
+                            <label htmlFor="exampleFormControlSelect1">Start</label>
+                            <select key="start" className="form-control" defaultValue={this.state.start} onChange={this.handleFormChange}>
+                                {startOptions}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="exampleFormControlSelect1">End</label>
+                            <select key="end" className="form-control" defaultValue={this.state.end} onChange={this.handleFormChange}>
+                                {endOptions}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="exampleFormControlSelect1">Amount</label>
+                            <select key="amount" className="form-control" defaultValue={this.state.amount} onChange={this.handleFormChange}>
+                                {amountOptions}
+                            </select>
+                        </div>
+                        <button className="btn btn-primary" onClick={this.handleGenerate}>Generate</button>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="exampleFormControlSelect1">End</label>
-                        <select key="end" className="form-control" defaultValue={this.state.end} onChange={this.handleFormChange}>
-                            {endOptions}
-                        </select>
+                </form>
+                <form className="div" onSubmit={this.handleSort}>
+                    <div className="form-group row">
+                        <div className="form-group">
+                            <label htmlFor="exampleFormControlSelect1">Algorithm</label>
+                            <select key="algorithm" className="form-control">
+                                {algoOptions}
+                            </select>
+                        </div>
+                        <button className="btn btn-primary" onClick={this.handleSort}>Sort!</button>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="exampleFormControlSelect1">Amount</label>
-                        <select key="amount" className="form-control" defaultValue={this.state.amount} onChange={this.handleFormChange}>
-                            {amountOptions}
-                        </select>
-                    </div>
-                    <button className="btn btn-primary" onClick={this.handleGenerate}>Generate</button>
-                </div>
-                <div className="form-group row">
-                    <div className="form-group">
-                        <label htmlFor="exampleFormControlSelect1">Algorithm</label>
-                        <select key="algorithm" className="form-control">
-                            {algoOptions}
-                        </select>
-                    </div>
-                    <button className="btn btn-primary" onClick={this.handleSort}>Sort!</button>
-                </div>
-            </form>
+                </form>
+            </div>
         );
     }
 }
