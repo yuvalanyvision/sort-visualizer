@@ -15,7 +15,7 @@ class Form extends React.Component {
         this.state = {
             start: 0,
             end: 100,
-            amount: 100
+            amount: 100,
         };
 
         this.handleFormChange = this.handleFormChange.bind(this);
@@ -101,7 +101,7 @@ class Form extends React.Component {
                                 {algoOptions}
                             </select>
                         </div>
-                        <button className="btn btn-primary" onClick={this.handleSort}>Sort!</button>
+                        <button className="btn btn-primary" onClick={this.handleSort}>Sort</button>
                     </div>
                 </form>
             </div>

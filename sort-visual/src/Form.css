@@ -1,5 +1,5 @@
 .div {
-  padding-top: 50px;
+  padding-top: 20px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
@@ -22,7 +22,8 @@
 }
 
 .graph {
-  padding-top: 70px;
+  height: 500px;
+  padding-top: 50px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -31,8 +32,7 @@
 .graph-items {
   margin-right: 20px;
   display: flex;
-  height: 10px;
-  width: 5px;
+  width: 10px;
   background-color: blueviolet;
 }
 
