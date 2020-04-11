@@ -1,0 +1,1 @@
+SUPPORTED_ALGORITHMS = ['Bubble Sort','Merge Sort']
