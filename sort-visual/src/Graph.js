@@ -39,7 +39,10 @@ class Graph extends React.Component {
     render() {
         const bars = this.state.data.slice().map((value,index) => {
             return (
-                <div className="graph-items" key={index}>{value}</div>
+                <div className="middle-graph">
+                    <div className="graph-items" key={index} style={{height:index}}></div>
+                    <label>{value}</label>
+                </div>
             );
         });
 
