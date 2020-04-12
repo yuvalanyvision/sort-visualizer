@@ -16,24 +16,32 @@ class Graph extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:5000/algorithms', {mode: 'no-cors'})
-            .then(result => {
-                console.log(result);
+        const self = this;
+
+        fetch('/algorithms')
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                self.setState({algorithms: data.data});
             });
     }
 
     Generate(start, end, amount) {
-        postData('http://127.0.0.1:5000/generate', {start: start, end: end, amount: amount})
+        const self = this;
+
+        postData('/generate', {data: {start: start, end: end, count: amount}})
+            .then((response) => {
+            return response.json();
+            })
             .then((data) => {
-                console.log(data); // JSON data parsed by `response.json()` call
+                console.log(data);
+                self.setState({algorithms: data.data});
             });
     }
 
     StartSort() {
-        postData('http://127.0.0.1:5000/sort', {})
-            .then((data) => {
-                console.log(data); // JSON data parsed by `response.json()` call
-            });
     }
 
     render() {
@@ -72,5 +80,5 @@ async function postData(url = '', data = {}) {
         referrerPolicy: 'no-referrer', // no-referrer, *client
         body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
-    return response; // parses JSON response into native JavaScript objects
+    return response.json(); // parses JSON response into native JavaScript objects
 }
