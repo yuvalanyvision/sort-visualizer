@@ -45,7 +45,7 @@ class Graph extends React.Component {
 
       socket.emit("sort", {
         data: {
-          arr: this.state.data,
+          arr: [5,6,8,2,6,5],
           interval: 0.5,
           algorithm: "Merge Sort",
         },

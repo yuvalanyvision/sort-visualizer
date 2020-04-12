@@ -9,7 +9,7 @@ app.config['SECRET_KEY'] = 'mysecret'
 api = Api(app)
 api.add_resource(Algorithms, '/algorithms')
 api.add_resource(Generator, '/generate')
-socketio = SocketIO(app)
+socketio = SocketIO()
 
 
 @app.route('/')
@@ -20,4 +20,5 @@ def sessions():
 socketio.on_namespace(Sort('/sort'))
 
 if __name__ == '__main__':
+    socketio.init_app(app, cors_allowed_origins="*")
     socketio.run(app)
