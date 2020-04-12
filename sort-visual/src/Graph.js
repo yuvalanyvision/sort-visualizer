@@ -1,6 +1,6 @@
 import React from 'react';
-import request from 'request';
 import Form from './Form.js';
+import io from 'socket.io-client';
 import '../node_modules/bootstrap/scss/bootstrap.scss';
 import './Form.css';
 
@@ -10,37 +10,60 @@ class Graph extends React.Component {
 
         this.state = {
             data: [...Array(50).keys()],
-            algorithms: ['Default', 'BUBBLE', 'MERGE'],
+            algorithms: ['DEFAULT'],
         };
 
+        this.Generate = this.Generate.bind(this);
+        this.StartSort = this.StartSort.bind(this);
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:5000/algorithms', {mode: 'no-cors'})
-            .then(result => {
-                console.log(result);
+        fetch('/algorithms')
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                this.setState({algorithms: data.data});
             });
     }
 
     Generate(start, end, amount) {
-        postData('http://127.0.0.1:5000/generate', {start: start, end: end, amount: amount})
+        postData('/generate', {data: {start: start, end: end, count: amount}})
+            .then((response) => {
+                return response.json();
+            })
             .then((data) => {
-                console.log(data); // JSON data parsed by `response.json()` call
+                this.setState({data: data.data});
             });
     }
 
-    StartSort() {
-        postData('http://127.0.0.1:5000/sort', {})
-            .then((data) => {
-                console.log(data); // JSON data parsed by `response.json()` call
-            });
+    StartSort(algorithm) {
+        const socket = io('http://localhost:5000');
+
+        socket.on('connect', () => {
+            console.log(socket.connected); // true
+
+            socket.emit('sort', {data: {
+                arr: this.state.data,
+                interval: 0.5,
+                algorithms: algorithm
+            }});
+        });
+
+        socket.on('swap', res => {
+            console.log(res.data);
+        });
+
+        socket.on('final', res => {
+            console.log(res.data);
+        })
     }
 
     render() {
         const bars = this.state.data.slice().map((value,index) => {
             return (
                 <div className="middle-graph">
-                    <div className="graph-items" key={index} style={{height:index*8}} title={index}></div>
+                    <div className="graph-items" key={index} style={{height:value*4}} title={index}></div>
                     <label>{value}</label>
                 </div>
             );
@@ -61,7 +84,7 @@ async function postData(url = '', data = {}) {
     // Default options are marked with *
     const response = await fetch(url, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'no-cors', // no-cors, *cors, same-origin
+        mode: 'same-origin', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
