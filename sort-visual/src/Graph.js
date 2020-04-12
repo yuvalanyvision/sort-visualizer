@@ -16,9 +16,15 @@ class Graph extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:5000/algorithms', {mode: 'no-cors'})
-            .then(result => {
-                console.log(result);
+        const self = this;
+
+        fetch('http://127.0.0.1:5000/algorithms')
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data.data);
+                self.setState({data: data.data});
             });
     }
 
@@ -61,7 +67,7 @@ async function postData(url = '', data = {}) {
     // Default options are marked with *
     const response = await fetch(url, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'no-cors', // no-cors, *cors, same-origin
+        mode: 'same-origin', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'same-origin', // include, *same-origin, omit
         headers: {
