@@ -30,10 +30,17 @@
 }
 
 .graph-items {
-  margin-right: 20px;
+  margin-right: 4px;
   display: flex;
   width: 10px;
   background-color: blueviolet;
+}
+
+.graph-items-swap {
+  margin-right: 4px;
+  display: flex;
+  width: 10px;
+  background-color: darkorange;
 }
 
 .middle-graph {

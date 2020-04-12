@@ -9,12 +9,14 @@ class Graph extends React.Component {
     super(props);
 
     this.state = {
-      data: [...Array(50).keys()],
-      algorithms: ["DEFAULT"],
+        data: [...Array(50).keys()],
+        algorithms: ["DEFAULT"],
+        swap: Array(0)
     };
 
     this.Generate = this.Generate.bind(this);
     this.StartSort = this.StartSort.bind(this);
+    this.updateData = this.updateData.bind(this);
   }
 
   componentDidMount() {
@@ -25,6 +27,19 @@ class Graph extends React.Component {
       .then((data) => {
         this.setState({ algorithms: data.data });
       });
+  }
+
+  updateData(swap) {
+      if(swap.length>0) {
+          let data = this.state.data.slice();
+          let temp = data[swap[0]];
+          data[swap[0]] = data[swap[1]];
+          data[swap[0]] = temp;
+
+          this.setState({
+              data: data
+          });
+      }
   }
 
   Generate(start, end, amount) {
@@ -41,37 +56,57 @@ class Graph extends React.Component {
     const socket = io.connect("/sort");
 
     socket.on("connect", () => {
-      console.log(socket.connected); // true
-
       socket.emit("sort", {
         data: {
-          arr: [5,6,8,2,6,5],
-          interval: 0.5,
-          algorithm: "Merge Sort",
+          arr: this.state.data,
+          interval: 0.1,
+          algorithm: "Bubble Sort", //Need to change to - algorithm after server fix
         },
       });
     });
 
     socket.on("swap", (res) => {
-      console.log(res);
+        let swap = res.swap;
+
+        if(swap.length > 0) {
+            let data = this.state.data.slice();
+            let temp = data[swap[0]];
+            data[swap[0]] = data[swap[1]];
+            data[swap[1]] = temp;
+
+            this.setState({
+                data: data,
+                swap: swap
+            });
+        }
     });
 
     socket.on("final", (res) => {
-      console.log(res);
+      this.setState({
+          data: res,
+          swap: []
+      });
     });
   }
 
   render() {
+    const swap = this.state.swap.slice();
     const bars = this.state.data.slice().map((value, index) => {
+      let className = "graph-items";
+
+      if(swap.length > 0) {
+          className = swap.includes(index) ? "graph-items-swap" : "graph-items";
+      }
+
       return (
-        <div className="middle-graph">
+        <div className={className}>
           <div
-            className="graph-items"
+            className={className}
             key={index}
             style={{ height: value * 4 }}
-            title={index}
+            title={value}
           ></div>
-          <label>{value}</label>
+
         </div>
       );
     });
