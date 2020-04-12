@@ -7,7 +7,7 @@ class Form extends React.Component {
         super(props);
 
         this.Algorithms = {
-            Default: 'Default',
+            DEFAULT: 'Select an Algorithm ...',
             BUBBLE: 'Bubble sort',
             MERGE: 'Merge Sort'
         };
@@ -15,7 +15,8 @@ class Form extends React.Component {
         this.state = {
             start: 0,
             end: 100,
-            amount: 100,
+            amount: 50,
+            algorithm: 'DEFAULT'
         };
 
         this.handleFormChange = this.handleFormChange.bind(this);
@@ -25,10 +26,10 @@ class Form extends React.Component {
 
     handleFormChange(event) {
         const target = event.target;
-        const key = target.key;
+        const name = target.name;
 
         this.setState({
-            [key]: target.value
+            [name]: target.value
         });
     }
 
@@ -39,30 +40,18 @@ class Form extends React.Component {
 
     handleSort(event) {
         event.preventDefault();
-        this.props.onSort();
+        this.props.onSort(this.state.algorithm);
     }
 
     render() {
-        const algorithms = this.Algorithms;
+        const algorithmsENUM = this.Algorithms;
         const algoOptions = this.props.algorithms.slice().map((option, index) => {
             return(
-                <option key={index}>{algorithms[option]}</option>
+                <option key={index} value={option}>{algorithmsENUM[option]}</option>
             );
         });
 
-        const startOptions = [...Array(101).keys()].map((option, index) => {
-            return(
-                <option key={index}>{option}</option>
-            );
-        });
-
-        const endOptions = [...Array(101).keys()].map((option, index) => {
-            return(
-                <option key={index}>{option}</option>
-            );
-        });
-
-        const amountOptions = [...Array(101).keys()].map((option, index) => {
+        const numberOptions = [...Array(101).keys()].map((option, index) => {
             return(
                 <option key={index}>{option}</option>
             );
@@ -74,20 +63,20 @@ class Form extends React.Component {
                     <div className="form-group row">
                         <div className="form-group">
                             <label htmlFor="exampleFormControlSelect1">Start</label>
-                            <select key="start" className="form-control" defaultValue={this.state.start} onChange={this.handleFormChange}>
-                                {startOptions}
+                            <select name="start" className="form-control" defaultValue={this.state.start} onChange={this.handleFormChange}>
+                                {numberOptions}
                             </select>
                         </div>
                         <div className="form-group">
                             <label htmlFor="exampleFormControlSelect1">End</label>
-                            <select key="end" className="form-control" defaultValue={this.state.end} onChange={this.handleFormChange}>
-                                {endOptions}
+                            <select name="end" className="form-control" defaultValue={this.state.end} onChange={this.handleFormChange}>
+                                {numberOptions}
                             </select>
                         </div>
                         <div className="form-group">
                             <label htmlFor="exampleFormControlSelect1">Amount</label>
-                            <select key="amount" className="form-control" defaultValue={this.state.amount} onChange={this.handleFormChange}>
-                                {amountOptions}
+                            <select name="amount" className="form-control" defaultValue={this.state.amount} onChange={this.handleFormChange}>
+                                {numberOptions}
                             </select>
                         </div>
                         <button className="btn btn-primary" onClick={this.handleGenerate}>Generate</button>
@@ -97,7 +86,7 @@ class Form extends React.Component {
                     <div className="form-group row">
                         <div className="form-group">
                             <label htmlFor="exampleFormControlSelect1">Algorithm</label>
-                            <select key="algorithm" className="form-control">
+                            <select name="algorithm" className="form-control" defaultValue={this.state.start} onChange={this.handleFormChange}>
                                 {algoOptions}
                             </select>
                         </div>
