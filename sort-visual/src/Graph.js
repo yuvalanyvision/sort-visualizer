@@ -9,9 +9,9 @@ class Graph extends React.Component {
     super(props);
 
     this.state = {
-        data: [...Array(50).keys()],
-        algorithms: ["DEFAULT"],
-        swap: Array(0)
+      data: [...Array(50).keys()],
+      algorithms: ["DEFAULT"],
+      swap: [],
     };
 
     this.Generate = this.Generate.bind(this);
@@ -30,16 +30,16 @@ class Graph extends React.Component {
   }
 
   updateData(swap) {
-      if(swap.length>0) {
-          let data = this.state.data.slice();
-          let temp = data[swap[0]];
-          data[swap[0]] = data[swap[1]];
-          data[swap[0]] = temp;
+    if (swap.length > 0) {
+      let data = this.state.data.slice();
+      let temp = data[swap[0]];
+      data[swap[0]] = data[swap[1]];
+      data[swap[0]] = temp;
 
-          this.setState({
-              data: data
-          });
-      }
+      this.setState({
+        data: data,
+      });
+    }
   }
 
   Generate(start, end, amount) {
@@ -59,54 +59,72 @@ class Graph extends React.Component {
       socket.emit("sort", {
         data: {
           arr: this.state.data,
-          interval: 0.1,
-          algorithm: "Bubble Sort", //Need to change to - algorithm after server fix
+          interval: 0.01,
+          algorithm: algorithm, //Need to change to - algorithm after server fix
         },
+      });
+      this.setState({
+        count: 0,
+        init_arr: this.state.data,
       });
     });
 
     socket.on("swap", (res) => {
-        let swap = res.swap;
+      let swap = res.swap;
 
-        if(swap.length > 0) {
-            let data = this.state.data.slice();
-            let temp = data[swap[0]];
-            data[swap[0]] = data[swap[1]];
-            data[swap[1]] = temp;
+      if (swap.length > 0) {
+        let data = this.state.data.slice();
 
-            this.setState({
-                data: data,
-                swap: swap
-            });
-        }
+        data = this.swap(data, swap[0], swap[1]);
+        this.setState({
+          data: data,
+          swap: swap,
+          count: ++this.state.count,
+        });
+      }
     });
 
     socket.on("final", (res) => {
+      let swap = res.swap;
       this.setState({
-          data: res,
-          swap: []
+        swap: swap,
       });
+    });
+  }
+
+  swap(arr, index1, index2) {
+    let temp = arr[index1];
+    arr[index1] = arr[index2];
+    arr[index2] = temp;
+    return arr;
+  }
+
+  refresh() {
+    this.setState({
+      data: this.state.init_arr,
     });
   }
 
   render() {
     const swap = this.state.swap.slice();
+    let button_class_name = "btn btn-primary";
+    let ongoing = this.state.swap.length == 0 && this.state.init_arr
+
     const bars = this.state.data.slice().map((value, index) => {
       let className = "graph-items";
+      
 
-      if(swap.length > 0) {
-          className = swap.includes(index) ? "graph-items-swap" : "graph-items";
+      if (swap.length > 0) {
+        className = swap.includes(index) ? "graph-items-swap" : "graph-items";
       }
 
       return (
-        <div className={className}>
+        <div key={index} className={className}>
           <div
             className={className}
-            key={index}
             style={{ height: value * 4 }}
             title={value}
           ></div>
-
         </div>
       );
     });
@@ -119,6 +137,18 @@ class Graph extends React.Component {
           onGenerate={this.Generate}
         />
         <div className="graph">{bars}</div>
+        <div className="bottom">
+          Swaps: {this.state.count ? this.state.count : 0}
+          
+        </div>
+        <div className="bottom">
+            <button
+              className={ongoing ? button_class_name : button_class_name += ' disabled'}
+              onClick={ongoing ? () => this.refresh() : () => {}}
+            >
+              Refresh
+            </button>
+          </div>
       </div>
     );
   }
