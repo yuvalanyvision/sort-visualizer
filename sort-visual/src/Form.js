@@ -13,9 +13,9 @@ class Form extends React.Component {
         };
 
         this.state = {
-            start: 0,
+            start: 1,
             end: 100,
-            amount: 50,
+            amount: 80,
             algorithm: 'DEFAULT'
         };
 
@@ -51,9 +51,9 @@ class Form extends React.Component {
             );
         });
 
-        const numberOptions = [...Array(101).keys()].map((option, index) => {
+        const numberOptions = [...Array(100).keys()].map((option, index) => {
             return(
-                <option key={index}>{option}</option>
+                <option key={index + 1}>{option + 1}</option>
             );
         });
 

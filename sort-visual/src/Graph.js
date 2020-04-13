@@ -9,9 +9,10 @@ class Graph extends React.Component {
     super(props);
 
     this.state = {
-      data: [...Array(50).keys()],
+      data: [...Array(80).keys()],
       algorithms: ["DEFAULT"],
       swap: [],
+      count: 0
     };
 
     this.Generate = this.Generate.bind(this);
@@ -111,12 +112,7 @@ class Graph extends React.Component {
     let ongoing = this.state.swap.length == 0 && this.state.init_arr
 
     const bars = this.state.data.slice().map((value, index) => {
-      let className = "graph-items";
-      
-
-      if (swap.length > 0) {
-        className = swap.includes(index) ? "graph-items-swap" : "graph-items";
-      }
+      let className = (swap.length > 0 && swap.includes(index)) ? "graph-items-swap" : "graph-items";
 
       return (
         <div key={index} className={className}>
@@ -139,14 +135,13 @@ class Graph extends React.Component {
         <div className="graph">{bars}</div>
         <div className="bottom">
           Swaps: {this.state.count ? this.state.count : 0}
-          
         </div>
         <div className="bottom">
             <button
               className={ongoing ? button_class_name : button_class_name += ' disabled'}
               onClick={ongoing ? () => this.refresh() : () => {}}
             >
-              Refresh
+              Reset
             </button>
           </div>
       </div>
