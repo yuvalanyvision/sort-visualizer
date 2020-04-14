@@ -33,16 +33,18 @@ class Sort(Namespace):
         algo = Algorithm(self.socketio)
 
         if algo_name in SUPPORTED_ALGORITHMS and algo_name == SUPPORTED_ALGORITHMS[1]:
-            final = algo.merge_sort(emit_swap, arr, 0, len(arr) - 1)
+            algo.merge_sort(emit_swap, arr, 0, len(arr) - 1)
+        elif algo_name in SUPPORTED_ALGORITHMS and algo_name == SUPPORTED_ALGORITHMS[2]:
+            algo.quick_sort(emit_swap, arr, 0, len(arr)-1)
         else:
-            final = algo.bubblesort(emit_swap, arr)
-        
+            algo.bubblesort(emit_swap, arr)
+
         for _ in range(len(arr)):
             emit("final",  {
                 'swap': [_]
             })
             self.socketio.sleep(interval)
         emit("final",  {
-                'swap': []
-            })
+            'swap': []
+        })
         disconnect()

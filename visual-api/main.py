@@ -21,4 +21,4 @@ socketio.on_namespace(Sort('/sort'))
 
 if __name__ == '__main__':
     socketio.init_app(app, cors_allowed_origins="*")
-    socketio.run(app)
+    socketio.run(app, host= '0.0.0.0', port=5000, debug=True)

@@ -41,3 +41,33 @@ class Algorithm:
             self.merge_sort(func, list, m + 1, r)
             merge(func, list, l, m, r)
         return list
+
+    
+    def quick_sort(self,func,arr,low,high): 
+        def partition(func,arr,low,high): 
+            i = ( low-1 )         # index of smaller element 
+            pivot = arr[high]     # pivot 
+        
+            for j in range(low , high): 
+        
+                # If current element is smaller than or 
+                # equal to pivot 
+                if   arr[j] <= pivot: 
+                
+                    # increment index of smaller element 
+                    i = i+1 
+                    self.swap(func,arr,i,j)
+    
+            self.swap(func,arr,high,i+1)
+            return ( i+1 ) 
+        
+        if low < high: 
+    
+            # pi is partitioning index, arr[p] is now 
+            # at right place 
+            pi = partition(func,arr,low,high) 
+    
+            # Separately sort elements before 
+            # partition and after partition 
+            self.quick_sort(func,arr, low, pi-1) 
+            self.quick_sort(func,arr, pi+1, high) 
