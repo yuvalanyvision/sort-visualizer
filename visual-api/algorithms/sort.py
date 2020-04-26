@@ -30,14 +30,14 @@ class Sort(Namespace):
         if 'algorithm' in data:
             algo_name = data['algorithm']
 
-        algo = Algorithm(self.socketio)
+        algo = Algorithm(self.socketio, emit_swap)
 
         if algo_name in SUPPORTED_ALGORITHMS and algo_name == SUPPORTED_ALGORITHMS[1]:
-            algo.merge_sort(emit_swap, arr, 0, len(arr) - 1)
+            algo.merge_sort(arr, 0, len(arr) - 1)
         elif algo_name in SUPPORTED_ALGORITHMS and algo_name == SUPPORTED_ALGORITHMS[2]:
-            algo.quick_sort(emit_swap, arr, 0, len(arr)-1)
+            algo.quick_sort(arr, 0, len(arr)-1)
         else:
-            algo.bubblesort(emit_swap, arr)
+            algo.bubblesort(arr)
 
         for _ in range(len(arr)):
             emit("final",  {
